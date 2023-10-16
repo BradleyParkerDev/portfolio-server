@@ -7,11 +7,12 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+//loads the contents of config.env
+require("dotenv").config();
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
-//loads the contents of config.env
-require("dotenv").config();
+
 
 const app = express();
 app.use(cors());

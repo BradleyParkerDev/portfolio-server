@@ -39,6 +39,7 @@ const contact = async (req, res, next) =>{
         message: req.body.message
     } 
     console.log(messageObject)
+    console.log(MY_EMAIL)
     const mailOptions = {
       from: messageObject.emailAddress,
       to: MY_EMAIL,
