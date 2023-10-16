@@ -1,6 +1,8 @@
 const createError = require('http-errors');
+const cors = require('cors'); // Import the cors middleware
 const express = require('express');
 const nodemailer = require('nodemailer');
+const { google } = require('google-auth-library'); // Import google object from google-auth-library
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -12,7 +14,7 @@ const usersRouter = require('./routes/users');
 require("dotenv").config();
 
 const app = express();
-
+app.use(cors());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

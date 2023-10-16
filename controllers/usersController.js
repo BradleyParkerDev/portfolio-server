@@ -1,12 +1,40 @@
 const nodemailer = require('nodemailer');
-// Configure the SMTP transporter for Gmail
+const { google } = require('googleapis'); // Import google object from googleapis
+
+// Load your Gmail credentials from environment variables
+// const MY_EMAIL = process.env.GMAIL_EMAIL;
+// const CLIENT_ID = process.env.GMAIL_CLIENT_ID;
+// const CLIENT_SECRET = process.env.GMAIL_CLIENT_SECRET;
+// const REDIRECT_URI = process.env.GMAIL_REDIRECT_URI;
+// const REFRESH_TOKEN = process.env.GMAIL_REFRESH_TOKEN;
+
+const MY_EMAIL = 'realbradley91@gmail.com';
+const CLIENT_ID = '23179896235-f3j53j5e9l4j7ohvsqfgj7a8vhjoieul.apps.googleusercontent.com';
+const CLIENT_SECRET = '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';
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
+const REFRESH_TOKEN = '1//04YSs_oHePHz4CgYIARAAGAQSNwF-L9Ir9GxOcglVU3k6VJNdujXZ05AKPzwb-Ohnafc0bj6kDTKmE5G5_FznMCxt5dGmG3JnumY';
+
+
+
+// Create a new OAuth2 client
+const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+
+// Set the OAuth2 client credentials
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
+
+// Create a Nodemailer transporter with OAuth2
 const transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    auth: {
-      user: 'realbradley91@gmail.com',
-      pass: process.env.GMAIL_PASSWORD, // Access the Gmail password from environment variables
-    },
-  });
+  service: 'Gmail',
+  auth: {
+    type: 'OAuth2',
+    user: MY_EMAIL,
+    clientId: CLIENT_ID,
+    clientSecret: CLIENT_SECRET,
+    refreshToken: REFRESH_TOKEN,
+    accessToken: oAuth2Client.getAccessToken(),
+  },
+});
 
 const contact = async (req, res, next) =>{
     const messageObject = { 
@@ -18,7 +46,7 @@ const contact = async (req, res, next) =>{
     console.log(messageObject)
     const mailOptions = {
       from: messageObject.emailAddress,
-      to: 'realbradley91@gmail.com',
+      to: MY_EMAIL,
       subject: messageObject.subject,
       text: `Name: ${messageObject.name}\nEmail: ${messageObject.emailAddress}\nMessage: ${messageObject.message}`,
     };
